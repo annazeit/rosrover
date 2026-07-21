@@ -1,37 +1,83 @@
 #!/usr/bin/env python3
-"""
-mecanum_node.py — Mecanum wheel motor controller
-Subscribes to /cmd_vel and drives 4 motors via 2x L298N using Jetson.GPIO
-
-TODO: GPIO logic to be filled in (Prompt 2)
-"""
 
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
 
+try:
+    import Jetson.GPIO as GPIO
+    GPIO_AVAILABLE = True
+except ImportError:
+    GPIO_AVAILABLE = False
+
+# Direction pins only — ENA/ENB jumpers stay ON for full speed
+FL_IN1 = 29
+FL_IN2 = 31
+RL_IN3 = 37
+RL_IN4 = 38
+FR_IN1 = 35
+FR_IN2 = 40
+RR_IN3 = 11
+RR_IN4 = 13
+
 
 class MecanumController(Node):
     def __init__(self):
         super().__init__('mecanum_controller')
-        self.get_logger().info('Mecanum controller node started — GPIO not yet configured')
-
+        self._setup_gpio()
         self.subscription = self.create_subscription(
-            Twist,
-            '/cmd_vel',
-            self.cmd_vel_callback,
-            10
-        )
+            Twist, '/cmd_vel', self.cmd_vel_callback, 10)
+        self.get_logger().info('Mecanum controller ready')
+
+    def _setup_gpio(self):
+        if not GPIO_AVAILABLE:
+            self.get_logger().warn('Jetson.GPIO not found — running without motors')
+            return
+        GPIO.setmode(GPIO.BOARD)
+        for pin in [FL_IN1, FL_IN2, RL_IN3, RL_IN4,
+                    FR_IN1, FR_IN2, RR_IN3, RR_IN4]:
+            GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+        self.get_logger().info('GPIO initialised')
+
+    def _set_motor(self, in_a, in_b, speed):
+        if not GPIO_AVAILABLE:
+            return
+        if speed > 0.1:
+            GPIO.output(in_a, GPIO.HIGH)
+            GPIO.output(in_b, GPIO.LOW)
+        elif speed < -0.1:
+            GPIO.output(in_a, GPIO.LOW)
+            GPIO.output(in_b, GPIO.HIGH)
+        else:
+            GPIO.output(in_a, GPIO.LOW)
+            GPIO.output(in_b, GPIO.LOW)
 
     def cmd_vel_callback(self, msg: Twist):
         vx = msg.linear.x
         vy = msg.linear.y
         wz = msg.angular.z
-        self.get_logger().info(f'cmd_vel received: vx={vx:.2f} vy={vy:.2f} wz={wz:.2f}')
-        # Motor drive logic goes here (Prompt 2)
+        fl = vx - vy - wz
+        fr = vx + vy + wz
+        rl = vx + vy - wz
+        rr = vx - vy + wz
+        self.get_logger().debug(f'FL={fl:.2f} FR={fr:.2f} RL={rl:.2f} RR={rr:.2f}')
+        self._set_motor(FL_IN1, FL_IN2, fl)
+        self._set_motor(FR_IN1, FR_IN2, fr)
+        self._set_motor(RL_IN3, RL_IN4, rl)
+        self._set_motor(RR_IN3, RR_IN4, rr)
+
+    def _stop_all(self):
+        if not GPIO_AVAILABLE:
+            return
+        for pin in [FL_IN1, FL_IN2, RL_IN3, RL_IN4,
+                    FR_IN1, FR_IN2, RR_IN3, RR_IN4]:
+            GPIO.output(pin, GPIO.LOW)
 
     def destroy_node(self):
-        self.get_logger().info('Shutting down — motors stopped')
+        self._stop_all()
+        if GPIO_AVAILABLE:
+            GPIO.cleanup()
+        self.get_logger().info('Shutdown — motors stopped, GPIO cleaned up')
         super().destroy_node()
 
 
