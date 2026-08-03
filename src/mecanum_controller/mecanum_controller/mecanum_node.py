@@ -11,10 +11,21 @@ except ImportError:
     GPIO_AVAILABLE = False
 
 # Direction pins only — ENA/ENB jumpers stay ON for full speed
+<<<<<<< HEAD
 FL_IN1 = 29
 FL_IN2 = 31
 RL_IN3 = 37
 RL_IN4 = 38
+=======
+# L298N #1: IN1/IN2 (pins 29/31) → OUT1/OUT2 → RL motor
+#           IN3/IN4 (pins 37/38) → OUT3/OUT4 → FL motor
+# L298N #2: IN1/IN2 (pins 35/40) → OUT1/OUT2 → FR motor
+#           IN3/IN4 (pins 11/13) → OUT3/OUT4 → RR motor
+FL_IN1 = 37
+FL_IN2 = 38
+RL_IN3 = 29
+RL_IN4 = 31
+>>>>>>> ae7163e (Fix: swap FL and RL pin assignments to match actual wiring)
 FR_IN1 = 35
 FR_IN2 = 40
 RR_IN3 = 11
