@@ -65,9 +65,9 @@ class MecanumController(Node):
         rl = vx + vy - wz
         rr = vx - vy + wz
         self.get_logger().debug(f'FL={fl:.2f} FR={fr:.2f} RL={rl:.2f} RR={rr:.2f}')
-        self._set_motor(FL_IN1, FL_IN2, fl)
+        self._set_motor(FL_IN2, FL_IN1, fl)  # swapped: left motors wired opposite polarity
         self._set_motor(FR_IN1, FR_IN2, fr)
-        self._set_motor(RL_IN3, RL_IN4, rl)
+        self._set_motor(RL_IN4, RL_IN3, rl)  # swapped: left motors wired opposite polarity
         self._set_motor(RR_IN3, RR_IN4, rr)
 
     def _stop_all(self):
