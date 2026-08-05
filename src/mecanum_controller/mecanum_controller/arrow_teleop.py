@@ -44,8 +44,9 @@ from geometry_msgs.msg import Twist
 # ---------------------------------------------------------------------------
 
 LINEAR_SPEED  = 0.5   # m/s   — forward / backward speed
-ANGULAR_SPEED = 1.0   # rad/s — rotation speed
-HOLD_TIMEOUT  = 0.4   # s     — how long to keep an axis active after last keypress
+ANGULAR_SPEED = 0.5   # rad/s — rotation speed (half of linear so turning is manageable)
+HOLD_TIMEOUT  = 0.6   # s     — how long to keep an axis active after last keypress
+                      #         needs to be longer than SSH's initial key-repeat delay (~500ms)
 
 
 class ArrowTeleop(Node):
