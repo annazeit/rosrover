@@ -81,9 +81,15 @@ def main(args=None):
 
     try:
         curses.wrapper(run)
+    except KeyboardInterrupt:
+        pass
     finally:
+        node.stop()
         node.destroy_node()
-        rclpy.shutdown()
+        try:
+            rclpy.shutdown()
+        except Exception:
+            pass
 
 
 if __name__ == '__main__':
