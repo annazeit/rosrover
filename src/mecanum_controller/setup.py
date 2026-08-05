@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'mecanum_node = mecanum_controller.mecanum_node:main',
+            'arrow_teleop = mecanum_controller.arrow_teleop:main',
         ],
     },
 )
