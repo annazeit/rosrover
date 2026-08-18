@@ -24,7 +24,7 @@ LiPo 14.8V (XT60)
 
 ## GPIO Pin Layout (Jetson 40-pin header → L298N)
 
-**L298N #1**  -  controls RL (rear left) and FL (front left) motors
+**L298N #1** - controls RL (rear left) and FL (front left) motors
 
 | Jetson BOARD pin | Wire goes to | Controls |
 |-----------------|--------------|---------|
@@ -34,7 +34,7 @@ LiPo 14.8V (XT60)
 | 38 | IN4 | FL direction B |
 | GND (any) | GND | shared ground |
 
-**L298N #2**  -  controls FR (front right) and RR (rear right) motors
+**L298N #2** - controls FR (front right) and RR (rear right) motors
 
 | Jetson BOARD pin | Wire goes to | Controls |
 |-----------------|--------------|---------|
@@ -54,7 +54,7 @@ LiPo 14.8V (XT60)
 
 ## Startup Commands (run on Jetson after every reboot)
 
-### Step 1  -  Configure GPIO pinmux (run once per boot)
+### Step 1 - Configure GPIO pinmux (run once per boot)
 
 Open a terminal on the Jetson and run all 8 lines:
 
@@ -69,7 +69,7 @@ sudo busybox devmem 0x2430098 w 0x5  # pin 11 (RR_IN1)
 sudo busybox devmem 0x243D030 w 0x5  # pin 13 (RR_IN2)
 ```
 
-### Step 2  -  Terminal 1: start the motor controller
+### Step 2 - Terminal 1: start the motor controller
 
 ```bash
 ros2 run mecanum_controller mecanum_node
@@ -77,9 +77,9 @@ ros2 run mecanum_controller mecanum_node
 
 Expected output: `Mecanum controller ready`
 
-### Step 3  -  Terminal 2: start keyboard control
+### Step 3 - Terminal 2: start keyboard control
 
-Two options  -  pick one:
+Two options - pick one:
 
 **Option A: Arrow teleop (recommended)**
 Uses arrow keys. Hold a key to drive, release to stop.
@@ -113,7 +113,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 | `o` | Forward + rotate right |
 | `k` | Stop |
 
-Speed up/down: `q`/`z`  -  increase/decrease linear and angular speed together.
+Speed up/down: `q`/`z` - increase/decrease linear and angular speed together.
 
 ---
 
@@ -172,19 +172,19 @@ Use arrow keys to drive. Note: the front left wheel currently only spins backwar
 Plug in LD19 via USB. Open 4 SSH terminals into the Jetson (`ssh annaz@192.168.0.210`).
 For RViz use `ssh -X annaz@192.168.0.210` so the window appears on your laptop.
 
-### Terminal 1  -  LiDAR
+### Terminal 1 - LiDAR
 
 ```bash
 ros2 launch ldlidar_stl_ros2 ld19.launch.py serial_port:=/dev/ttyUSB0
 ```
 
-### Terminal 2  -  Fake odometry (no wheel encoders needed)
+### Terminal 2 - Fake odometry (no wheel encoders needed)
 
 ```bash
 python3 ~/fake_odom.py
 ```
 
-### Terminal 3  -  SLAM Toolbox
+### Terminal 3 - SLAM Toolbox
 
 ```bash
 ros2 launch slam_toolbox online_async_launch.py \
@@ -192,10 +192,10 @@ ros2 launch slam_toolbox online_async_launch.py \
   use_sim_time:=false
 ```
 
-Expected: `Registering sensor: [Custom Described Lidar]`  -  means it's working.
+Expected: `Registering sensor: [Custom Described Lidar]` - means it's working.
 No output after that is normal (errors would appear if something was wrong).
 
-### Terminal 4  -  RViz (via ssh -X session)
+### Terminal 4 - RViz (via ssh -X session)
 
 ```bash
 rviz2
@@ -227,8 +227,8 @@ Saves `~/my_map.pgm` and `~/my_map.yaml` on the Jetson.
 
 ### Troubleshooting SLAM
 
-**"Failed to compute odom pose" spam**  -  fake_odom isn't running, or slam_toolbox was launched with wrong args. Make sure to use `slam_params_file:=` (not `params_file:=`) and `use_sim_time:=false`.
+**"Failed to compute odom pose" spam** - fake_odom isn't running, or slam_toolbox was launched with wrong args. Make sure to use `slam_params_file:=` (not `params_file:=`) and `use_sim_time:=false`.
 
-**Map not appearing in RViz**  -  check `/map` is publishing: `ros2 topic hz /map`. If publisher count on `/scan` is 0, the LiDAR node died  -  restart Terminal 1.
+**Map not appearing in RViz** - check `/map` is publishing: `ros2 topic hz /map`. If publisher count on `/scan` is 0, the LiDAR node died - restart Terminal 1.
 
-**map_saver "Failed to spin map subscription"**  -  add `--ros-args -p save_map_timeout:=15.0` to give it time to receive the map (publishes every 10s).
+**map_saver "Failed to spin map subscription"** - add `--ros-args -p save_map_timeout:=15.0` to give it time to receive the map (publishes every 10s).

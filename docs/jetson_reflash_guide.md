@@ -1,12 +1,12 @@
 # How to Reflash the Jetson Orin Nano Super
-*Anna's personal guide  -  Yahboom Jetson Orin Nano Super 8GB*
+*Anna's personal guide - Yahboom Jetson Orin Nano Super 8GB*
 
 ---
 
 ## What you need
 
-- Kingston 64GB USB (dedicated to JetPack 7.2  -  keep it plugged into the Jetson kit box)
-- Aorus PC (Windows 11)  -  for Rufus if you ever need to redo the USB
+- Kingston 64GB USB (dedicated to JetPack 7.2 - keep it plugged into the Jetson kit box)
+- Aorus PC (Windows 11) - for Rufus if you ever need to redo the USB
 - HDMI cable + monitor
 - Power adapter for the Jetson
 - USB-C cable (from the kit)
@@ -22,19 +22,19 @@
 
 ---
 
-## Step 1  -  Recreate the USB (only if needed)
+## Step 1 - Recreate the USB (only if needed)
 
 If the Kingston USB already has JetPack 7.2 on it, skip to Step 2.
 
 If you need to redo it:
 
-1. Download the ISO on the Aorus PC  -  paste this URL directly into Chrome and press Enter:
+1. Download the ISO on the Aorus PC - paste this URL directly into Chrome and press Enter:
    ```
    https://developer.nvidia.com/downloads/embedded/L4T/r39_Release_v2.0/iso/jetsoninstaller-r39.2.0-2026-06-01-23-53-13-arm64.iso
    ```
    It's ~5–6 GB and will take a while.
 
-2. Open **Rufus** (rufus-4.14.exe  -  keep a copy in your Downloads)
+2. Open **Rufus** (rufus-4.14.exe - keep a copy in your Downloads)
 
 3. Settings in Rufus:
    - **Device**: Kingston USB (64 GB)
@@ -47,23 +47,23 @@ If you need to redo it:
 
 ---
 
-## Step 2  -  Put the Jetson into recovery mode
+## Step 2 - Put the Jetson into recovery mode
 
 Recovery mode is how the Jetson boots from USB instead of NVMe.
 
 1. Make sure the Jetson is **powered off and unplugged**
 2. Plug the **Kingston USB** into one of the Jetson's USB ports
-3. Find the **Button Header J14**  -  the row of pins near the edge of the carrier board
-4. **Short pins 9 and 10** (the 2nd and 3rd pegs from the left)  -  use a jumper cap, a piece of wire, or a metal tweezer tip, held in place
+3. Find the **Button Header J14** - the row of pins near the edge of the carrier board
+4. **Short pins 9 and 10** (the 2nd and 3rd pegs from the left) - use a jumper cap, a piece of wire, or a metal tweezer tip, held in place
 5. While holding pins 9–10 shorted, plug in the **power adapter** and power on
 6. You can release the short after about 2 seconds
 
 ---
 
-## Step 3  -  Boot the installer
+## Step 3 - Boot the installer
 
 1. Connect the Jetson to the monitor via HDMI
-2. Power on  -  after a few seconds you'll see a simple text menu:
+2. Power on - after a few seconds you'll see a simple text menu:
 
    ```
    * Install Jetson ISO r39.2.0
@@ -71,13 +71,13 @@ Recovery mode is how the Jetson boots from USB instead of NVMe.
      UEFI Firmware Settings
    ```
 
-3. **Select "Install Jetson ISO r39.2.0"** (it should already be highlighted  -  just press Enter)
+3. **Select "Install Jetson ISO r39.2.0"** (it should already be highlighted - just press Enter)
 
-   ⚠️ Do NOT accidentally select "Boot from next volume"  -  that skips the installer
+   **Do NOT** accidentally select "Boot from next volume" - that skips the installer
 
 ---
 
-## Step 4  -  Run the installer
+## Step 4 - Run the installer
 
 The installer runs automatically. It will:
 - Wipe the NVMe SSD completely
@@ -88,11 +88,11 @@ The screen will show progress. Don't touch anything. When it's done it will eith
 
 ---
 
-## Step 5  -  Verify it worked
+## Step 5 - Verify it worked
 
 1. Remove the Kingston USB after the installer finishes
 2. Power cycle the Jetson (unplug and replug power)
-3. It should boot directly into Ubuntu  -  you'll see the NVIDIA logo, then the Ubuntu desktop
+3. It should boot directly into Ubuntu - you'll see the NVIDIA logo, then the Ubuntu desktop
 4. Open a terminal and run:
    ```bash
    uname -r
@@ -107,7 +107,7 @@ The screen will show progress. Don't touch anything. When it's done it will eith
 
 ---
 
-## Step 6  -  After a reflash, reinstall your tools
+## Step 6 - After a reflash, reinstall your tools
 
 Every reflash is a clean slate, so you'll need to reinstall:
 
@@ -134,8 +134,8 @@ Keep your project code backed up on GitHub so you never lose it during a reflash
 
 | Problem | Fix |
 |---------|-----|
-| Menu doesn't appear, just black screen | USB may not be seated properly  -  try a different USB port on the Jetson |
-| "Boot from next volume" selected by accident | Power cycle and try again  -  no harm done |
+| Menu doesn't appear, just black screen | USB may not be seated properly - try a different USB port on the Jetson |
+| "Boot from next volume" selected by accident | Power cycle and try again - no harm done |
 | Installer crashes halfway | Power cycle, boot USB again, select installer again |
 | Ubuntu boots but feels broken after install | Run `sudo apt update && sudo apt upgrade -y` first before anything else |
 | Jetson not detected in recovery mode | Make sure pins 9–10 are shorted BEFORE powering on, not after |
