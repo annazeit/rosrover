@@ -43,7 +43,7 @@ from geometry_msgs.msg import Twist
 # Tunable parameters
 # ---------------------------------------------------------------------------
 
-LINEAR_SPEED  = -0.5  # m/s   — negated because chassis is mounted reversed
+LINEAR_SPEED  = 0.5  # m/s   — negated because chassis is mounted reversed
 ANGULAR_SPEED = 0.5   # rad/s — rotation speed (half of linear so turning is manageable)
 HOLD_TIMEOUT  = 0.6   # s     — how long to keep an axis active after last keypress
                       #         needs to be longer than SSH's initial key-repeat delay (~500ms)
