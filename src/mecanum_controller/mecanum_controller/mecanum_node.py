@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-mecanum_node.py — ROS2 motor controller for a 4-wheel mecanum drive robot.
+mecanum_node.py  -  ROS2 motor controller for a 4-wheel mecanum drive robot.
 
 Subscribes to /cmd_vel (geometry_msgs/Twist) and drives four motors via two
 L298N motor driver boards connected to the Jetson's 40-pin GPIO header.
@@ -27,7 +27,7 @@ value: positive = forward, negative = backward, near-zero = stop.
 --- GPIO setup on the Yahboom Jetson Orin Nano Super ---
 The standard Jetson.GPIO library shows a warning on Yahboom's carrier board
 and is unreliable. More importantly, the Jetson Orin's PADCTL (pad control)
-registers default to a high-impedance state after boot — the GPIO controller
+registers default to a high-impedance state after boot  -  the GPIO controller
 can write a signal, but it won't appear on the physical pin until the pad is
 configured.
 
@@ -41,12 +41,12 @@ See startup_guide.md for the full startup sequence.
 ENA and ENB jumpers stay ON on both boards (full speed, no PWM).
 
 L298N #1 (left side motors):
-  IN1/IN2 → BOARD pins 29/31 → OUT1/OUT2 → RL (rear left) motor
-  IN3/IN4 → BOARD pins 37/38 → OUT3/OUT4 → FL (front left) motor
+  IN1/IN2 -> BOARD pins 29/31 -> OUT1/OUT2 -> RL (rear left) motor
+  IN3/IN4 -> BOARD pins 37/38 -> OUT3/OUT4 -> FL (front left) motor
 
 L298N #2 (right side motors):
-  IN1/IN2 → BOARD pins 35/40 → OUT1/OUT2 → FR (front right) motor
-  IN3/IN4 → BOARD pins 11/13 → OUT3/OUT4 → RR (rear right) motor
+  IN1/IN2 -> BOARD pins 35/40 -> OUT1/OUT2 -> FR (front right) motor
+  IN3/IN4 -> BOARD pins 11/13 -> OUT3/OUT4 -> RR (rear right) motor
 
 Note: FL and RL motor wires are physically connected with reversed polarity
 compared to the right side. This is corrected in software by swapping the
@@ -69,13 +69,13 @@ except ImportError:
 # GPIO pin numbers (Jetson BOARD numbering, i.e. physical pin position)
 # ---------------------------------------------------------------------------
 
-# L298N #1 — left side
+# L298N #1  -  left side
 RL_IN1 = 29   # rear left,  direction A
 RL_IN2 = 31   # rear left,  direction B
 FL_IN1 = 37   # front left, direction A
 FL_IN2 = 38   # front left, direction B
 
-# L298N #2 — right side
+# L298N #2  -  right side
 FR_IN1 = 35   # front right, direction A
 FR_IN2 = 40   # front right, direction B
 RR_IN1 = 11   # rear right,  direction A
@@ -90,7 +90,7 @@ class MecanumController(Node):
         self._setup_gpio()
         self.subscription = self.create_subscription(
             Twist, '/cmd_vel', self.cmd_vel_callback, 10)
-        self.get_logger().info('Mecanum controller ready — listening on /cmd_vel')
+        self.get_logger().info('Mecanum controller ready  -  listening on /cmd_vel')
 
     # ------------------------------------------------------------------
     # GPIO setup
@@ -99,7 +99,7 @@ class MecanumController(Node):
     def _setup_gpio(self):
         if not GPIO_AVAILABLE:
             self.get_logger().warn(
-                'Jetson.GPIO not found — running in simulation mode (no motor output)')
+                'Jetson.GPIO not found  -  running in simulation mode (no motor output)')
             return
         GPIO.setmode(GPIO.BOARD)          # use physical pin numbers
         for pin in ALL_PINS:
@@ -118,9 +118,9 @@ class MecanumController(Node):
         speed      : positive = forward, negative = backward, ~0 = coast/stop
 
         The L298N H-bridge works like this:
-          in_a HIGH, in_b LOW  → motor spins one way
-          in_a LOW,  in_b HIGH → motor spins the other way
-          both LOW             → motor coasts (no power)
+          in_a HIGH, in_b LOW  -> motor spins one way
+          in_a LOW,  in_b HIGH -> motor spins the other way
+          both LOW             -> motor coasts (no power)
         """
         if not GPIO_AVAILABLE:
             return
@@ -143,14 +143,14 @@ class MecanumController(Node):
         vy = msg.linear.y    # strafe left (+) / right (-)
         wz = msg.angular.z   # rotate counter-clockwise (+) / clockwise (-)
 
-        # Mecanum kinematics — see module docstring for derivation
+        # Mecanum kinematics  -  see module docstring for derivation
         fl = vx - vy - wz
         fr = vx + vy + wz
         rl = vx + vy - wz
         rr = vx - vy + wz
 
         self.get_logger().debug(
-            f'cmd_vel → FL={fl:.2f}  FR={fr:.2f}  RL={rl:.2f}  RR={rr:.2f}')
+            f'cmd_vel -> FL={fl:.2f}  FR={fr:.2f}  RL={rl:.2f}  RR={rr:.2f}')
 
         # FL and RL have reversed polarity wiring, so in_a/in_b are swapped
         self._set_motor(FL_IN2, FL_IN1, fl)   # swapped
@@ -173,7 +173,7 @@ class MecanumController(Node):
         self._stop_all()
         if GPIO_AVAILABLE:
             GPIO.cleanup()
-        self.get_logger().info('Shutdown — motors stopped, GPIO cleaned up')
+        self.get_logger().info('Shutdown  -  motors stopped, GPIO cleaned up')
         super().destroy_node()
 
 

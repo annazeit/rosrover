@@ -32,13 +32,13 @@ If you need to redo it:
    ```
    https://developer.nvidia.com/downloads/embedded/L4T/r39_Release_v2.0/iso/jetsoninstaller-r39.2.0-2026-06-01-23-53-13-arm64.iso
    ```
-   It's ~5–6 GB and will take a while.
+   It's ~5-6 GB and will take a while.
 
 2. Open **Rufus** (rufus-4.14.exe - keep a copy in your Downloads)
 
 3. Settings in Rufus:
    - **Device**: Kingston USB (64 GB)
-   - **Boot selection**: click SELECT → find the ISO you just downloaded
+   - **Boot selection**: click SELECT -> find the ISO you just downloaded
    - When asked about ISO Hybrid: choose **"Write in ISO Image mode (Recommended)"**
    - When asked about Grub version: click **Yes** (lets it download matching Grub)
    - Confirm the warning about wiping the USB: click **OK**
@@ -55,7 +55,7 @@ Recovery mode is how the Jetson boots from USB instead of NVMe.
 2. Plug the **Kingston USB** into one of the Jetson's USB ports
 3. Find the **Button Header J14** - the row of pins near the edge of the carrier board
 4. **Short pins 9 and 10** (the 2nd and 3rd pegs from the left) - use a jumper cap, a piece of wire, or a metal tweezer tip, held in place
-5. While holding pins 9–10 shorted, plug in the **power adapter** and power on
+5. While holding pins 9-10 shorted, plug in the **power adapter** and power on
 6. You can release the short after about 2 seconds
 
 ---
@@ -82,7 +82,7 @@ Recovery mode is how the Jetson boots from USB instead of NVMe.
 The installer runs automatically. It will:
 - Wipe the NVMe SSD completely
 - Install a fresh JetPack 7.2 (Ubuntu 24.04) onto it
-- Take roughly 15–30 minutes
+- Take roughly 15-30 minutes
 
 The screen will show progress. Don't touch anything. When it's done it will either reboot automatically or show a completion message.
 
@@ -138,8 +138,8 @@ Keep your project code backed up on GitHub so you never lose it during a reflash
 | "Boot from next volume" selected by accident | Power cycle and try again - no harm done |
 | Installer crashes halfway | Power cycle, boot USB again, select installer again |
 | Ubuntu boots but feels broken after install | Run `sudo apt update && sudo apt upgrade -y` first before anything else |
-| Jetson not detected in recovery mode | Make sure pins 9–10 are shorted BEFORE powering on, not after |
+| Jetson not detected in recovery mode | Make sure pins 9-10 are shorted BEFORE powering on, not after |
 
 ---
 
-*Last updated: June 2026 · JetPack 7.2 / L4T R39.2 / Ubuntu 24.04*
+*Last updated: June 2026  -  JetPack 7.2 / L4T R39.2 / Ubuntu 24.04*

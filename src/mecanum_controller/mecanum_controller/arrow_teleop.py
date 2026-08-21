@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-arrow_teleop.py — keyboard teleoperation using arrow keys.
+arrow_teleop.py  -  keyboard teleoperation using arrow keys.
 
 Publishes geometry_msgs/Twist messages to /cmd_vel, which mecanum_node
 subscribes to and translates into motor commands.
@@ -9,14 +9,14 @@ subscribes to and translates into motor commands.
 UP/DOWN arrows control the forward/backward axis (linear.x).
 LEFT/RIGHT arrows control the rotation axis (angular.z).
 Both axes are tracked independently, so holding UP while tapping LEFT/RIGHT
-will drive the robot forward while turning — like WASD controls in a game.
+will drive the robot forward while turning  -  like WASD controls in a game.
 
 --- How the key input works ---
 The `curses` library puts the terminal into raw mode, meaning keypresses are
 read immediately (no need to press Enter) and special keys like the arrows
 are available as named constants (curses.KEY_UP etc.).
 
-stdscr.nodelay(True) makes getch() non-blocking — it returns immediately
+stdscr.nodelay(True) makes getch() non-blocking  -  it returns immediately
 with -1 if no key is pressed, rather than waiting.
 
 --- The HOLD_TIMEOUT ---
@@ -28,7 +28,7 @@ Only then does that axis stop. Each axis has its own independent timer.
 
 --- How this connects to the rest of the robot ---
 This node only publishes to /cmd_vel. mecanum_node subscribes to /cmd_vel.
-ROS2's topic system connects them automatically — neither node knows or cares
+ROS2's topic system connects them automatically  -  neither node knows or cares
 about the other directly.
 """
 
@@ -43,9 +43,9 @@ from geometry_msgs.msg import Twist
 # Tunable parameters
 # ---------------------------------------------------------------------------
 
-LINEAR_SPEED  = 0.5  # m/s   — negated because chassis is mounted reversed
-ANGULAR_SPEED = 0.5   # rad/s — rotation speed (half of linear so turning is manageable)
-HOLD_TIMEOUT  = 0.6   # s     — how long to keep an axis active after last keypress
+LINEAR_SPEED  = 0.5  # m/s    -  negated because chassis is mounted reversed
+ANGULAR_SPEED = 0.5   # rad/s  -  rotation speed (half of linear so turning is manageable)
+HOLD_TIMEOUT  = 0.6   # s      -  how long to keep an axis active after last keypress
                       #         needs to be longer than SSH's initial key-repeat delay (~500ms)
 
 
@@ -53,7 +53,7 @@ class ArrowTeleop(Node):
     def __init__(self):
         super().__init__('arrow_teleop')
         self.pub = self.create_publisher(Twist, '/cmd_vel', 10)
-        self.get_logger().info('Arrow teleop ready — arrow keys to drive, q to quit')
+        self.get_logger().info('Arrow teleop ready  -  arrow keys to drive, q to quit')
 
     def publish(self, linear_x=0.0, angular_z=0.0):
         """Send a velocity command. Omitted fields default to zero."""
@@ -76,14 +76,14 @@ def main(args=None):
         stdscr.nodelay(True)  # getch() returns -1 immediately if no key pressed
         stdscr.timeout(50)    # unblock every 50 ms to drive the hold-timeout check
 
-        stdscr.addstr(0, 0, 'Arrow Teleop — arrow keys to drive, q to quit')
+        stdscr.addstr(0, 0, 'Arrow Teleop  -  arrow keys to drive, q to quit')
         stdscr.addstr(2, 0, '  UP / DOWN        = forward / backward')
         stdscr.addstr(3, 0, '  LEFT / RIGHT     = rotate (combine with UP/DOWN to curve)')
         stdscr.addstr(4, 0, '  q                = quit')
 
         # Each axis is tracked independently so both can be active at once.
-        # linear  : UP / DOWN  → linear.x  (forward/backward)
-        # angular : LEFT / RIGHT → angular.z (rotation)
+        # linear  : UP / DOWN  -> linear.x  (forward/backward)
+        # angular : LEFT / RIGHT -> angular.z (rotation)
         linear_speed     = 0.0   # current value on the linear axis
         angular_speed    = 0.0   # current value on the angular axis
         linear_last_time  = 0.0  # last time an UP/DOWN key was seen
