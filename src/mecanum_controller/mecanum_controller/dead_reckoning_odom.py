@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-dead_reckoning_odom.py — dead-reckoning odometry for a mecanum drive robot.
+dead_reckoning_odom.py  -  dead-reckoning odometry for a mecanum drive robot.
 
 Replaces fake_odom.py. Instead of always publishing position (0, 0, 0),
 this node subscribes to /cmd_vel and integrates the velocity commands over
@@ -21,13 +21,13 @@ commanded speed, and that the wheels don't slip. In practice there's error.
 But even an imperfect estimate is much better than always publishing zero.
 
 --- What is published ---
-1. TF transform: odom → base_link (required by SLAM Toolbox)
+1. TF transform: odom -> base_link (required by SLAM Toolbox)
 2. nav_msgs/Odometry on /odom (standard ROS odometry topic)
 
 --- How position is estimated ---
 Every tick (50 Hz), we look at the last velocity command received on /cmd_vel:
   vx    = linear.x   (forward/backward speed in m/s, robot frame)
-  vy    = linear.y   (strafe speed in m/s, robot frame — always 0 for arrow_teleop)
+  vy    = linear.y   (strafe speed in m/s, robot frame  -  always 0 for arrow_teleop)
   omega = angular.z  (rotation speed in rad/s)
 
 We convert from robot frame to world frame:
@@ -48,7 +48,7 @@ then LINEAR_SPEED ≈ 1.0 / that_time_in_seconds.
 --- Usage ---
   python3 ~/dead_reckoning_odom.py
 
-  (Run this instead of fake_odom.py — same place in the startup sequence)
+  (Run this instead of fake_odom.py  -  same place in the startup sequence)
 """
 
 import math
@@ -61,11 +61,11 @@ from geometry_msgs.msg import TransformStamped
 
 
 # ---------------------------------------------------------------------------
-# Tunable parameters — adjust if the map still drifts badly
+# Tunable parameters  -  adjust if the map still drifts badly
 # ---------------------------------------------------------------------------
 
 PUBLISH_HZ = 50           # how often to integrate and publish (Hz)
-CMD_VEL_TIMEOUT = 0.5     # seconds — if no cmd_vel received in this time,
+CMD_VEL_TIMEOUT = 0.5     # seconds  -  if no cmd_vel received in this time,
                           # treat velocity as zero (robot has stopped)
 
 
@@ -94,14 +94,14 @@ class DeadReckoningOdom(Node):
         # Publisher for the odometry topic
         self.odom_pub = self.create_publisher(Odometry, '/odom', 10)
 
-        # TF broadcaster for odom → base_link
+        # TF broadcaster for odom -> base_link
         self.tf_broadcaster = TransformBroadcaster(self)
 
         # Integration timer
         self.timer = self.create_timer(1.0 / PUBLISH_HZ, self._tick)
 
         self.get_logger().info(
-            'Dead-reckoning odometry ready — publishing odom → base_link TF')
+            'Dead-reckoning odometry ready  -  publishing odom -> base_link TF')
 
     def _cmd_vel_callback(self, msg: Twist):
         """Store the latest velocity command."""
@@ -138,7 +138,7 @@ class DeadReckoningOdom(Node):
         qz = math.sin(self.heading / 2.0)
         qw = math.cos(self.heading / 2.0)
 
-        # --- Publish TF: odom → base_link ---
+        # --- Publish TF: odom -> base_link ---
         tf_msg = TransformStamped()
         tf_msg.header.stamp = now.to_msg()
         tf_msg.header.frame_id = 'odom'

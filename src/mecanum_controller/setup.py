@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'mecanum_node = mecanum_controller.mecanum_node:main',
             'arrow_teleop = mecanum_controller.arrow_teleop:main',
+            'dead_reckoning_odom = mecanum_controller.dead_reckoning_odom:main',
         ],
     },
 )
